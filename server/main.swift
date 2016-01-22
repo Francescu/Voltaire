@@ -1,20 +1,11 @@
-#if os(Linux)
-import Glibc
-#endif
-
 import Foundation
-import Swifter
 
-let server = HttpServer()
+let app = App("./client/public/")
+    
+app.get("hello") { request in 
 
-server["/public/:path"] = HttpHandlers.directory("../client/public/")
-server["/"] = { request in
-  return .OK(HttpResponseBody.Html("<img src='./public/swift.png' />")) 
+    return "<h1>test</h1><img src=\"/static/swift.png\" />"
 }
 
-try! server.start()
-
-while true {
-    sleep(1)
-}
+app.listen()
 
