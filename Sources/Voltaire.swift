@@ -6,7 +6,7 @@ import Foundation
 import Swifter
 import Mustache
 
-struct Request {
+public struct Request {
     
     private init(swifterRequest: HttpRequest) {
 
@@ -14,22 +14,18 @@ struct Request {
 }
 
 
-struct App {
+public struct App {
     private let server = HttpServer()
-    var staticPath: String {
-        didSet {
-            self.server["/static/:path"] = HttpHandlers.directory(staticPath) 
-        }
-    }
+    public let staticPath: String 
 
     var baseHTMLPath: String = "./" 
 
-    init(staticPath: String = "./static/") {
+    public init(staticPath: String = "./static/") {
        self.server["/static/:path"] = HttpHandlers.directory(staticPath) 
        self.staticPath = staticPath
     }
 
-    func listen(port: UInt16 = 8080) {
+    public func listen(port: UInt16 = 8080) {
         try! self.server.start(port)
 
         print("Server started at port \(port)")
@@ -37,8 +33,9 @@ struct App {
             sleep(1)
         }
     }
-    typealias AppResponseHandler = (Request) -> String
-    func get(path:String, handler: AppResponseHandler) {
+
+    public typealias AppResponseHandler = (Request) -> String
+    public func get(path:String, handler: AppResponseHandler) {
         self.server[path] = { swifterRequest in
             let request = Request(swifterRequest: swifterRequest)
             let response = handler(request)
@@ -49,7 +46,7 @@ struct App {
 }
 
 extension App {
-    func render(path: String, _ params: [String: String]) -> String {
+    public func render(path: String, _ params: [String: String]) -> String {
         let template = try! Template(path: path)
         return try! template.render(Box(params))
     }
