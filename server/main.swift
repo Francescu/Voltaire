@@ -1,10 +1,10 @@
 import Foundation
+import Voltaire
 
-let app = App("./client/public/")
-    
+let app = App(staticPath: "./client/public/")
+
 app.get("hello") { request in 
-
-    return "<h1>test</h1><img src=\"/static/swift.png\" />"
+    return app.render("client/index.html", ["image" : "swift"])
 }
 
 app.listen()
